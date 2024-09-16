@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
 	"url-shortener/internal/storage"
 
 	"github.com/mattn/go-sqlite3"
@@ -16,6 +18,11 @@ type Storage struct {
 func New(storagePath string) (*Storage, error) {
 	const op = "storage.sqlite.New"
 
+	dir := filepath.Dir(storagePath)
+	if _, err := os.Stat(dir); errors.Is(err, os.ErrNotExist) {
+		os.Mkdir(dir, os.ModePerm)
+	}
+
 	db, err := sql.Open("sqlite3", storagePath)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
@@ -26,7 +33,7 @@ func New(storagePath string) (*Storage, error) {
 			id INTEGER PRIMARY KEY,
 			alias TEXT NOT NULL UNIQUE,
 			url TEXT NOT NULL);
-		CREATE INDEX IF NOT EXISTS idx_alias ON url(alias)
+		CREATE UNIQUE INDEX IF NOT EXISTS idx_alias ON url(alias);
 	`)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
