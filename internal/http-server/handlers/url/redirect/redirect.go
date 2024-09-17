@@ -29,7 +29,7 @@ func New(log *slog.Logger, urlGetter URLGetter) http.HandlerFunc {
 		alias := chi.URLParam(r, "alias")
 		if alias == "" {
 			log.Info("alias is empty")
-			render.JSON(w, r, "invalid request")
+			render.JSON(w, r, resp.Error("invalid request"))
 			return
 		}
 

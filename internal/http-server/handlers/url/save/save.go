@@ -37,7 +37,7 @@ func New(log *slog.Logger, urlSaver URLSaver) http.HandlerFunc {
 
 		log = log.With(
 			slog.String("op", op),
-			slog.String("reqest_id", middleware.GetReqID(r.Context())),
+			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
 		var req Request
