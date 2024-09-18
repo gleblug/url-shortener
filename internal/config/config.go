@@ -24,7 +24,7 @@ type HTTPServer struct {
 }
 
 func MustLoad() *Config {
-	err := godotenv.Load("config.env")
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Some error occured. Err: %s", err)
 	}
